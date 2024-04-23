@@ -1,11 +1,14 @@
 import Board from "./components/Board";
+import ToolBar from "./components/Toolbar";
+import BoardProvider from "./components/store/BoardProvider";
 
 function App() {
 
   return (
-    <div className="App">
+    <BoardProvider>
+      <ToolBar/>
       <Board/>
-    </div>
+    </BoardProvider>
   )
 }
 
