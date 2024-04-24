@@ -1,6 +1,6 @@
 import Board from "./components/Board";
 import ToolBar from "./components/Toolbar";
-import BoardProvider from "./components/store/BoardProvider";
+import BoardProvider from "./store/BoardProvider";
 
 function App() {
 
