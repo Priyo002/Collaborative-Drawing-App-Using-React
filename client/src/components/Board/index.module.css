@@ -1,0 +1,6 @@
+.cursor{
+    @apply cursor-crosshair
+}
+.cursor.moveCursor{
+    @apply cursor-all-scroll
+}
