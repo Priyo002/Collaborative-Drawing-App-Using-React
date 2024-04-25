@@ -14,7 +14,7 @@ import boardContext from '../../store/board-context';
 
 const ToolBar = () => {
   
-  const {activeToolItem, changeToolHandler} = useContext(boardContext)
+  const {activeToolItem, changeToolHandler} = useContext(boardContext);
 
   return (
     <div className={classes.container}>
