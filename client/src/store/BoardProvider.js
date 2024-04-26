@@ -14,14 +14,14 @@ const boardReducer = (state,action) => {
             }
         }
         case BOARD_ACTIONS.DRAW_DOWN: {
-            const {clientX,clientY} = action.payload;
+            const {clientX,clientY, stroke, fill, size} = action.payload;
             const newElement = createRoughElement(
                 state.elements.length,
                 clientX,
                 clientY,
                 clientX,
                 clientY,
-                {type : state.activeToolItem}
+                {type : state.activeToolItem, stroke,fill, size}
             )
             const prevElements = state.elements;
             return {
@@ -34,14 +34,14 @@ const boardReducer = (state,action) => {
             const {clientX,clientY} = action.payload;
             const newElements = [...state.elements];
             const index = state.elements.length-1;
-            const {x1,y1} = newElements[index];
+            const {x1,y1, stroke,fill , size} = newElements[index];
             const newElement = createRoughElement(
                 index,
                 x1,
                 y1,
                 clientX,
                 clientY,
-                {type: state.activeToolItem},
+                {type : state.activeToolItem, stroke,fill,size},
             );
 
             newElements[index] = newElement;
@@ -68,7 +68,10 @@ const initialBoardState = {
 
 const BoardProvider = ({children}) => {
 
-    const [boardState, dispatchBoardAction] = useReducer(boardReducer, initialBoardState);
+    const [boardState, dispatchBoardAction] = useReducer(
+        boardReducer, 
+        initialBoardState
+    );
 
     const changeToolHandler = (tool) => {
         dispatchBoardAction({
@@ -79,7 +82,7 @@ const BoardProvider = ({children}) => {
         })
     }; 
 
-    const boardMouseDownHandler = (event) => {
+    const boardMouseDownHandler = (event,toolboxState) => {
         const {clientX, clientY} = event;
     
         dispatchBoardAction({
@@ -87,6 +90,9 @@ const BoardProvider = ({children}) => {
             payload :{
                 clientX,
                 clientY,
+                stroke: toolboxState[boardState.activeToolItem]?.stroke,
+                fill: toolboxState[boardState.activeToolItem]?.fill,
+                size: toolboxState[boardState.activeToolItem]?.size,
             },
         });
     }

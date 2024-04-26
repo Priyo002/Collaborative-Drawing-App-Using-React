@@ -3,7 +3,7 @@ import rough from "roughjs";
 import boardContext from "../../store/board-context";
 import { TOOL_ACTION_TYPES, TOOL_ITEMS } from "../../constants";
 import classes from "./index.module.css"
-
+import toolboxContext from "../../store/toolbox-context"
 import cx from "classnames"
 
 
@@ -16,7 +16,9 @@ function Board() {
     boardMouseMoveHandler, 
     boardMouseUpHandler, 
     toolActionType
-  } = useContext(boardContext)
+  } = useContext(boardContext);
+
+  const {toolboxState} = useContext(toolboxContext);
 
   useEffect(()=>{
     const canvas = canvasRef.current;
@@ -42,7 +44,7 @@ function Board() {
   },[elements]);
 
   const handleMouseDown = (event) => {
-    boardMouseDownHandler(event);
+    boardMouseDownHandler(event,toolboxState);
   };
 
   const handleMouseMove = (event) => {
