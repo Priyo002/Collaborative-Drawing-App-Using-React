@@ -103,7 +103,7 @@ export const isPointNearElement = (element, pointX, pointY) => {
         isPointCloseToLine(x1, y2, x1, y1, pointX, pointY)
       );
     case TOOL_ITEMS.BRUSH:
-      return context.isPointInPath(element.path, pointX, pointY);
+      return context.isPointInPath(new Path2D(element.path), pointX, pointY);
     case TOOL_ITEMS.TEXT:
       context.font = `${element.size}px Caveat`;
       context.fillStyle = element.stroke;

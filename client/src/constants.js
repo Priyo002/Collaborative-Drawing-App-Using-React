@@ -26,6 +26,7 @@ export const TOOL_ITEMS = {
     CHANGE_TEXT: "CHANGE_TEXT",
     UNDO: "UNDO",
     REDO: "REDO",
+    RELOAD: "RELOAD"
   };
   
   export const COLORS = {

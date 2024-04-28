@@ -3,7 +3,6 @@ import rough from "roughjs";
 import boardContext from "../../store/board-context";
 import { TOOL_ACTION_TYPES, TOOL_ITEMS } from "../../constants";
 import toolboxContext from "../../store/toolbox-context";
-
 import classes from "./index.module.css";
 
 
@@ -13,7 +12,7 @@ function Board() {
   const canvasRef = useRef();
   const textAreaRef = useRef();
 
-  let {
+  const {
     elements,
     toolActionType,
     boardMouseDownHandler,
@@ -66,7 +65,7 @@ function Board() {
           break;
         case TOOL_ITEMS.BRUSH:
           context.fillStyle = element.stroke;
-          //context.fill(element.path);
+          context.fill(element.path);
           context.restore();
           break;
         case TOOL_ITEMS.TEXT:
@@ -95,9 +94,7 @@ function Board() {
     }
   }, [toolActionType]);
 
-  
-  async function sendRequest(){
-  
+  async function saveData(){
     const data = await fetch("http://localhost:5000/setItem",{
       method: "POST",
       body: JSON.stringify({
@@ -109,9 +106,10 @@ function Board() {
       },
     })
 
-    const d = await data.json();
-    console.log(d);
+    const d1 = await data.json();
+    console.log(d1);
   }
+
 
   const handleMouseDown = (event) => {
     boardMouseDownHandler(event, toolboxState);
@@ -122,15 +120,11 @@ function Board() {
   };
 
   const handleMouseUp = () => {
-    try{
-      sendRequest(null);
-    }
-    catch(err){
-      console.error(err);
-    }
+    saveData();
     boardMouseUpHandler();
   };
 
+  
   
 
   return (

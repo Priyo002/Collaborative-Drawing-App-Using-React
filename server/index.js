@@ -10,7 +10,8 @@ app.use(cors({
     origin : "*",
 }));
 
-app.use(express.json({limit: "16kb"}))
+app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
 
 connectDB()
 .then(() => {
@@ -22,51 +23,39 @@ connectDB()
     console.log("MONGO db connection failed !!! ", err);
 })
 
-app.get("/",(req,res)=>{
-    res.status(200).send("Works");
-})
 
-app.get("/getItem",async (req,res)=>{
-
-    const data = await Board.create({
-        elements: "hel",
-    });
-    if(!data){
-        res.json({message: "Error"});
-    }
-    res.json({
-        data,
-        message: "success",
-    })
+app.post("/getItem",async (req,res)=>{
+    const {name} = req.body;
+    const data = await Board.findOne({name: name});
+    if(!data) res.json({data: []});
+    else res.json({data: data.elements});
 })
 
 app.post("/setItem",async (req,res)=>{
     
     const {name,newEle} = req.body;
 
-    //console.log(newEle);
-
-    
-
-    // await Board.findOneAndUpdate("ele",{...newEle});
-
-    const data = await Board.findOne({name});
-
-    if(!data){
-        await Board.create({
+    if(!name || !newEle) res.json({message: "error"});
+    else{
+        const data = await Board.findOne({name: name});
+        if(!data){
+            await Board.create({
+                name: name,
+                elements: newEle,
+            });
+        }
+        else{
+            await Board.findOneAndUpdate(
+                {name: name},
+                {elements: newEle}
+            ); 
+        }
+        res.json({
             name,
-            elements: newEle,
+            newEle,
+            message: "worked",
         })
     }
-    else{
-        res.json({data,message: "Worked 2"})
-    }
-
-    res.json({
-        data,
-        newEle,
-        message: "worked",
-    })
 })
 
 app.listen(5000,()=>{

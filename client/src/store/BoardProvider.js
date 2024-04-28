@@ -11,7 +11,7 @@ import getStroke from "perfect-freehand";
 
 const boardReducer = (state, action) => {
   switch (action.type) {
-    case "reload":{
+    case BOARD_ACTIONS.RELOAD:{
       const {newElements} = action.payload;
       return {
         ...state,
@@ -256,6 +256,7 @@ const BoardProvider = ({ children }) => {
   }, []);
 
   window.addEventListener('load',async () => {
+    
     const d = await fetch("http://localhost:5000/getItem",{
       method: 'POST',
       body: JSON.stringify({
@@ -267,9 +268,18 @@ const BoardProvider = ({ children }) => {
     })
     const t = await d.json();
     let ele = t.data;
+
+    for(let i=0;i<ele.length;i++){
+      let d = ele[i];
     
+      if(d.type===TOOL_ITEMS.BRUSH){
+      console.log("typeeeee", d);
+        d.path = new Path2D(getSvgPathFromStroke(getStroke(d.points)));
+      }
+    }
+
     dispatchBoardAction({
-      type: "reload",
+      type: BOARD_ACTIONS.RELOAD,
       payload: {
         newElements: [...ele],
       },
