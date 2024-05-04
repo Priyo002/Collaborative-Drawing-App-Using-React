@@ -107,7 +107,7 @@ function Board() {
     })
 
     const d1 = await data.json();
-    console.log(d1);
+    if(!d1) console.log(d1);
   }
 
 
@@ -146,6 +146,7 @@ function Board() {
       <canvas
         ref={canvasRef}
         id="canvas"
+        className="Univ"
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}

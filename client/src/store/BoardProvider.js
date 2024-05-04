@@ -273,7 +273,7 @@ const BoardProvider = ({ children }) => {
       let d = ele[i];
     
       if(d.type===TOOL_ITEMS.BRUSH){
-      console.log("typeeeee", d);
+      //console.log("typeeeee", d);
         d.path = new Path2D(getSvgPathFromStroke(getStroke(d.points)));
       }
     }

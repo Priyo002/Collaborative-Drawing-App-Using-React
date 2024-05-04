@@ -21,3 +21,6 @@
     line-height: inherit;
     font-family: "Caveat";
   }
+  .Univ{
+    overflow: scroll;
+  }
