@@ -2,8 +2,19 @@ import express from "express";
 import cors from "cors"
 import connectDB from "./db/index.js";
 import { Board } from "./models/board.models.js";
-
+import http from 'http';
 const app = express();
+const server = http.createServer(app);
+
+import { Server } from "socket.io";
+
+const io = new Server(server,{
+    cors: {
+        origin: '*',
+    }
+})
+
+
 
 
 app.use(cors({
@@ -21,6 +32,15 @@ connectDB()
 })
 .catch((err) => {
     console.log("MONGO db connection failed !!! ", err);
+})
+
+io.on('connection', (socket) => {
+    console.log('connect',socket.id);
+    socket.on('draw-line',(elements)=>{
+        //console.log(elements);
+        console.log('connectionnn',socket.id);
+        socket.broadcast.emit('draw-line',elements);
+    })
 })
 
 
@@ -58,6 +78,6 @@ app.post("/setItem",async (req,res)=>{
     }
 })
 
-app.listen(5000,()=>{
+server.listen(5000,()=>{
     console.log("server is running");
 })

@@ -4,7 +4,15 @@ import boardContext from "../../store/board-context";
 import { TOOL_ACTION_TYPES, TOOL_ITEMS } from "../../constants";
 import toolboxContext from "../../store/toolbox-context";
 import classes from "./index.module.css";
+import {io} from 'socket.io-client';
+import {
+  createElement,
+  getSvgPathFromStroke,
+  isPointNearElement,
+} from "../../utils/element";
+import getStroke from "perfect-freehand";
 
+const socket = io('http://localhost:5000');
 
 
 function Board() {
@@ -12,7 +20,7 @@ function Board() {
   const canvasRef = useRef();
   const textAreaRef = useRef();
 
-  const {
+  let {
     elements,
     toolActionType,
     boardMouseDownHandler,
@@ -48,7 +56,20 @@ function Board() {
     };
   }, [undo, redo]);
 
+  useEffect(()=>{
+    socket.on('draw-line',(ele)=>{
+      for(let i=0;i<ele.length;i++){
+        let d = ele[i];
+        if(d.type===TOOL_ITEMS.BRUSH){
+          d.path = new Path2D(getSvgPathFromStroke(getStroke(d.points)));
+        }
+      }
+  })
+  },[]);
+
+
   useLayoutEffect(() => {
+    
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
     context.save();
@@ -79,7 +100,7 @@ function Board() {
           throw new Error("Type not recognized");
       }
     });
-
+    socket.emit('draw-line',elements);
     return () => {
       context.clearRect(0, 0, canvas.width, canvas.height);
     };
@@ -120,7 +141,7 @@ function Board() {
   };
 
   const handleMouseUp = () => {
-    saveData();
+    //saveData();
     boardMouseUpHandler();
   };
 

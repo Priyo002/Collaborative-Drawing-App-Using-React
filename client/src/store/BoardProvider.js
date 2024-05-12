@@ -1,4 +1,4 @@
-import React, { useCallback, useReducer } from "react";
+import React, { useCallback, useEffect, useReducer } from "react";
 
 import boardContext from "./board-context";
 import { BOARD_ACTIONS, TOOL_ACTION_TYPES, TOOL_ITEMS } from "../constants";
@@ -8,6 +8,9 @@ import {
   isPointNearElement,
 } from "../utils/element";
 import getStroke from "perfect-freehand";
+import {io} from 'socket.io-client';
+const socket = io('http://localhost:5000');
+
 
 const boardReducer = (state, action) => {
   switch (action.type) {
@@ -162,6 +165,7 @@ const BoardProvider = ({ children }) => {
     initialBoardState
   );
 
+  
   const changeToolHandler = (tool) => {
     dispatchBoardAction({
       type: BOARD_ACTIONS.CHANGE_TOOL,
@@ -255,36 +259,36 @@ const BoardProvider = ({ children }) => {
     });
   }, []);
 
-  window.addEventListener('load',async () => {
+  // window.addEventListener('load',async () => {
     
-    const d = await fetch("http://localhost:5000/getItem",{
-      method: 'POST',
-      body: JSON.stringify({
-        name: "hello",
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-    const t = await d.json();
-    let ele = t.data;
+    // const d = await fetch("http://localhost:5000/getItem",{
+    //   method: 'POST',
+    //   body: JSON.stringify({
+    //     name: "hello",
+    //   }),
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    // })
+  //   const t = await d.json();
+  //   let ele = t.data;
 
-    for(let i=0;i<ele.length;i++){
-      let d = ele[i];
+  //   for(let i=0;i<ele.length;i++){
+  //     let d = ele[i];
     
-      if(d.type===TOOL_ITEMS.BRUSH){
-      //console.log("typeeeee", d);
-        d.path = new Path2D(getSvgPathFromStroke(getStroke(d.points)));
-      }
-    }
+  //     if(d.type===TOOL_ITEMS.BRUSH){
+  //     //console.log("typeeeee", d);
+  //       d.path = new Path2D(getSvgPathFromStroke(getStroke(d.points)));
+  //     }
+  //   }
 
-    dispatchBoardAction({
-      type: BOARD_ACTIONS.RELOAD,
-      payload: {
-        newElements: [...ele],
-      },
-    });
-  })
+  //   dispatchBoardAction({
+  //     type: BOARD_ACTIONS.RELOAD,
+  //     payload: {
+  //       newElements: [...ele],
+  //     },
+  //   });
+  // })
 
   const boardContextValue = {
     activeToolItem: boardState.activeToolItem,
