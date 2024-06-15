@@ -4,15 +4,6 @@ import boardContext from "../../store/board-context";
 import { TOOL_ACTION_TYPES, TOOL_ITEMS } from "../../constants";
 import toolboxContext from "../../store/toolbox-context";
 import classes from "./index.module.css";
-import {io} from 'socket.io-client';
-import {
-  createElement,
-  getSvgPathFromStroke,
-  isPointNearElement,
-} from "../../utils/element";
-import getStroke from "perfect-freehand";
-
-const socket = io('http://localhost:5000');
 
 
 function Board() {
@@ -56,16 +47,16 @@ function Board() {
     };
   }, [undo, redo]);
 
-  useEffect(()=>{
-    socket.on('draw-line',(ele)=>{
-      for(let i=0;i<ele.length;i++){
-        let d = ele[i];
-        if(d.type===TOOL_ITEMS.BRUSH){
-          d.path = new Path2D(getSvgPathFromStroke(getStroke(d.points)));
-        }
-      }
-  })
-  },[]);
+  // useEffect(()=>{
+  //   socket.on('draw-line',(ele)=>{
+  //     for(let i=0;i<ele.length;i++){
+  //       let d = ele[i];
+  //       if(d.type===TOOL_ITEMS.BRUSH){
+  //         d.path = new Path2D(getSvgPathFromStroke(getStroke(d.points)));
+  //       }
+  //     }
+  // })
+  // },[]);
 
 
   useLayoutEffect(() => {
@@ -100,7 +91,7 @@ function Board() {
           throw new Error("Type not recognized");
       }
     });
-    socket.emit('draw-line',elements);
+    //socket.emit('draw-line',elements);
     return () => {
       context.clearRect(0, 0, canvas.width, canvas.height);
     };
@@ -115,21 +106,21 @@ function Board() {
     }
   }, [toolActionType]);
 
-  async function saveData(){
-    const data = await fetch("http://localhost:5000/setItem",{
-      method: "POST",
-      body: JSON.stringify({
-        name: "hello",
-        newEle : elements,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
+  // async function saveData(){
+  //   const data = await fetch("http://localhost:5000/setItem",{
+  //     method: "POST",
+  //     body: JSON.stringify({
+  //       name: "hello",
+  //       newEle : elements,
+  //     }),
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //   })
 
-    const d1 = await data.json();
-    if(!d1) console.log(d1);
-  }
+  //   const d1 = await data.json();
+  //   if(!d1) console.log(d1);
+  // }
 
 
   const handleMouseDown = (event) => {
@@ -144,9 +135,6 @@ function Board() {
     //saveData();
     boardMouseUpHandler();
   };
-
-  
-  
 
   return (
     <>

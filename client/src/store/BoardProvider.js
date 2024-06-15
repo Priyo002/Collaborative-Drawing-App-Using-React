@@ -8,8 +8,8 @@ import {
   isPointNearElement,
 } from "../utils/element";
 import getStroke from "perfect-freehand";
-import {io} from 'socket.io-client';
-const socket = io('http://localhost:5000');
+// import {io} from 'socket.io-client';
+// const socket = io('http://localhost:5000');
 
 
 const boardReducer = (state, action) => {
