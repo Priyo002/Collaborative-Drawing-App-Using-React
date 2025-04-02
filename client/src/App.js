@@ -11,24 +11,14 @@ function App() {
 
   const [data, setData] = useState(null);
 
-  useEffect(() => {
-      fetch('http://localhost:5001/api/v1/sample/sample')
-      .then((res) => res.json())
-      .then((response) => setData(response))
-      .catch((err) => console.log(err));
-  }, []);
-
   return (
-    // <BoardProvider>
-    //   <ToolboxProvider>
-    //     <ToolBar/>
-    //     <Board/>
-    //     <Toolbox/>
-    //   </ToolboxProvider>
-    // </BoardProvider>
-    <div>
-      {data ? data.message : 'Loading...'}
-    </div>
+    <BoardProvider>
+      <ToolboxProvider>
+        <ToolBar/>
+        <Board/>
+        <Toolbox/>
+      </ToolboxProvider>
+    </BoardProvider>
   )
 }
 
